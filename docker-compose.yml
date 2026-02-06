@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: p2p-redis
+    ports:
+      - "6379:6379"
+
+  stun-server:
+    build: ./stun-server
+    container_name: stun-server
+    ports:
+      - "5000:5000"
+    environment:
+      REDIS_HOST: redis
+    depends_on:
+      - redis
+
+  peer1:
+    build: ./peer-client
+    container_name: peer1
+    stdin_open: true
+    tty: true
+    environment:
+      STUN_SERVER: http://stun-server:5000
+    depends_on:
+      - stun-server
+    command: python client.py --server http://stun-server:5000 --username user1 --port 5001 --auto
+
+  peer2:
+    build: ./peer-client
+    container_name: peer2
+    stdin_open: true
+    tty: true
+    environment:
+      STUN_SERVER: http://stun-server:5000
+    depends_on:
+      - stun-server
+    command: python client.py --server http://stun-server:5000 --username user2 --port 5002 --auto
+
+  peer3:
+    build: ./peer-client
+    container_name: peer3
+    stdin_open: true
+    tty: true
+    environment:
+      STUN_SERVER: http://stun-server:5000
+    depends_on:
+      - stun-server
+    command: python client.py --server http://stun-server:5000 --username user3 --port 5003 --auto
