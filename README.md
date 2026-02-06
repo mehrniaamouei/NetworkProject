@@ -19,21 +19,16 @@ docker-compose up --build
 ```
 
 ### Run Clients
-Open three new terminals and run:
+Open two new terminals and run:
 
 Terminal 1:
 ```bash
-docker exec -it peer1 python client.py --server http://stun-server:5000 --username user1 --port 5001 --auto
+docker exec -it peer1 python client.py --server http://stun-server:5000 --username ali --port 6001 --auto
 ```
 
 Terminal 2:
 ```bash
-docker exec -it peer2 python client.py --server http://stun-server:5000 --username user2 --port 5002 --auto
-```
-
-Terminal 3:
-```bash
-docker exec -it peer3 python client.py --server http://stun-server:5000 --username user3 --port 5003 --auto
+docker exec -it peer2 python client.py --server http://stun-server:5000 --username reza --port 6002 --auto
 ```
 
 ### Start Chatting
@@ -58,3 +53,15 @@ docker-compose up --build
 ```
 
 Note: You need 3 terminals for 3 clients.
+
+or you can use these commands to register or get the list of peers or one peer
+
+```bash
+curl -X POST http://localhost:5000/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "ali", "ip": "192.168.1.101", "port": 7001}'
+
+  curl http://localhost:5000/peers
+
+  curl "http://localhost:5000/peerinfo?username=ali"
+```
